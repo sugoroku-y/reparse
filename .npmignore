@@ -1,0 +1,8 @@
+/src/
+*.js.map
+/coverage/
+/.vscode/
+.travis.yml
+/test/
+/sample/
+*.tgz
