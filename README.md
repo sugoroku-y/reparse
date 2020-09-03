@@ -1,8 +1,8 @@
-# reparse
+# rexparse
 
 正規表現を使った簡易パーザークラスです。
 
-[![Build Status](https://travis-ci.org/sugoroku-y/reparse.svg?branch=master)](https://travis-ci.org/sugoroku-y/reparse)
+[![Build Status](https://travis-ci.org/sugoroku-y/rexparse.svg?branch=master)](https://travis-ci.org/sugoroku-y/rexparse)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 ```ts

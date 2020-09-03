@@ -1,5 +1,5 @@
 {
-  "name": "reparse",
+  "name": "rexparse",
   "version": "1.0.0",
   "description": "The easy parser with regular expressions",
   "main": "lib/index.js",
