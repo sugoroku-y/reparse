@@ -1,24 +1,23 @@
-import {scan, replace} from 'rexscan';
+import {scan} from 'rexscan';
 
 function throwError(message: string): never {
   throw new Error(message);
 }
 
-function assert(condition: unknown, message?: string) {
-  if (!condition) {
-    throwError(message ?? 'Assertion failed!');
+function unreachable(): never {
+  // この関数は実行されないはず
+  /* istanbul ignore next */
+  throwError('It should be unreachable here.');
+}
+
+function assertIsNotUndefined<T>(target: T | undefined): asserts target is T {
+  // この関数の実行時にはtargetはundefinedではないので、以下の条件式は常に偽
+  /* istanbul ignore next */
+  if (target === undefined) {
+    // 上記のためここには来ない
+    /* istanbul ignore next */
+    throwError('target must not be undefined');
   }
-}
-
-function unreachable(message?: string): never {
-  throwError(message ?? 'It should be unreachable here.');
-}
-
-function assertNonNull<T>(
-  target: T | null | undefined,
-  message?: string
-): asserts target is T {
-  assert(target !== null && target !== undefined, message);
 }
 
 class IndexedError extends Error {
@@ -53,9 +52,9 @@ function getLineInfo(
     }
     ++lineNo;
   }
-  unreachable(
-    `out of bounds: index: ${index}, content.length: ${content.length}`
-  );
+  // インデックスが見つからないことはないのでここには来ない
+  /* istanbul ignore next */
+  unreachable();
 }
 
 type ParserAction<CONTEXT> = (
@@ -97,23 +96,18 @@ export class Parser<CONTEXT> {
     const g = scan(this.re, content);
     try {
       for (const {index, groups, 0: matched} of g) {
-        assertNonNull(
-          groups,
-          'this.reには名前付きキャプチャを指定しているので、groupsはundefinedではないはず'
-        );
+        // this.reには名前付きキャプチャを指定しているので、groupsはundefinedではないはず
+        assertIsNotUndefined(groups);
         // match.groupsの中からマッチしたパターンの名前を取得
-        const type = Object.entries(groups).find(
+        const type = (Object.entries(groups).find(
           ([, value]) => value !== undefined
-        )?.[0];
-        assertNonNull(
-          type,
-          'this.reの名前付きキャプチャのどれかのパターンにマッチしているので、typeはundefinedではないはず'
-        );
+        ) ??
+          // this.reの名前付きキャプチャのどれかのパターンにマッチしているので、必ず見つかるはず
+          /* istanbul ignore next */
+          unreachable())[0];
         const action = this.actions[type];
-        assertNonNull(
-          action,
-          '名前付きキャプチャの名前に対応するアクションが登録されているので、this.actions[type]は存在しているはず'
-        );
+        // 名前付きキャプチャの名前に対応するアクションが登録されているので、this.actions[type]は存在しているはず
+        assertIsNotUndefined(action);
         // マッチしたパターンのアクションを実行
         context = action(matched, context, index);
       }
@@ -124,7 +118,11 @@ export class Parser<CONTEXT> {
     } catch (ex) {
       const {lineNo, columnNo, line} = getLineInfo(
         content,
-        ex.index ?? g.index ?? g.lastIndex
+        ex.index ??
+          g.index ??
+          // g.indexがundefinedということは終端までたどり着いているのに、エラーということは有り得ない
+          /* istanbul ignore next */
+          g.lastIndex
       );
       throwError(`${ex.message}${
         line.length !== content.length ? `(line: ${lineNo})` : ''
