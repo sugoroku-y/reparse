@@ -2,6 +2,9 @@
 
 正規表現を使った簡易パーザークラスです。
 
+[![NPM version](https://img.shields.io/npm/v/rexparse.svg?style=flat)](https://www.npmjs.com/package/rexparse)
+[![NPM monthly download](https://img.shields.io/npm/dm/rexparse.svg?style=flat)](https://www.npmjs.com/package/rexparse)
+[![NPM total download](https://img.shields.io/npm/dt/rexparse.svg?style=flat)](https://www.npmjs.com/package/rexparse)
 [![Build Status](https://travis-ci.org/sugoroku-y/rexparse.svg?branch=master)](https://travis-ci.org/sugoroku-y/rexparse)
 [![MIT License](http://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
